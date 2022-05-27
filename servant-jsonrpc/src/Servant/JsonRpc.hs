@@ -200,17 +200,17 @@ data JsonRpcNotification (method :: Symbol) p
 
 type family JsonRpcEndpoint a where
     JsonRpcEndpoint (JsonRpc m p e r)
-        = ReqBody '[JSONRPC] (Request p) :> Post '[JSONRPC] (JsonRpcResponse e r)
+        = ReqBody '[JSON, JSONRPC] (Request p) :> Post '[JSON, JSONRPC] (JsonRpcResponse e r)
 
     JsonRpcEndpoint (JsonRpcNotification m p)
-        = ReqBody '[JSONRPC] (Request p) :> Post '[JSONRPC] NoContent
+        = ReqBody '[JSON, JSONRPC] (Request p) :> Post '[JSON, JSONRPC] NoContent
 
 -- | The JSON-RPC content type
 data JSONRPC
 
 
 instance Accept JSONRPC where
-    contentTypes _ = "application" // "json-rpc" :| ["application" // "json"]
+    contentType _ = "application" // "json-rpc"
 
 
 instance ToJSON a => MimeRender JSONRPC a where
